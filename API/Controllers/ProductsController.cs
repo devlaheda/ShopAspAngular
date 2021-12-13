@@ -4,6 +4,8 @@ using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Core.Interfaces;
 using Core.Specifictaion;
+using AutoMapper;
+using API.DTOs;
 
 namespace API.Controllers
 {
@@ -14,24 +16,26 @@ namespace API.Controllers
         private readonly IGenericRepository<Product> _productRepository;
         private readonly IGenericRepository<ProductBrand> _brandRepository;
         private readonly IGenericRepository<ProductType> _typesRepository;
+        private readonly IMapper _mapper;
 
         public ProductsController( IGenericRepository<Product> productRepository,
-        IGenericRepository<ProductBrand> BrandRepository ,IGenericRepository<ProductType> typesRepository)
+        IGenericRepository<ProductBrand> BrandRepository ,IGenericRepository<ProductType> typesRepository , IMapper mapper)
         {
             _productRepository = productRepository;
             _brandRepository = BrandRepository;
             _typesRepository = typesRepository;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts()
         {
             var spec = new  ProductWithTypesAndBrandsSpecification();
             var products = await  _productRepository.GetAllWithSpecsAsync(spec);
-            return Ok(products);
+            return Ok(_mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products));
         }
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> GetProduct(int id)
+        public async Task<ActionResult<ProductDto>> GetProduct(int id)
         {
             var spec = new  ProductWithTypesAndBrandsSpecification(id);
                var product =  await _productRepository.GetByIdWithSpecsAsync(spec);
@@ -39,7 +43,7 @@ namespace API.Controllers
                {
                    return NotFound();
                }
-               return Ok(product);
+               return Ok(_mapper.Map<Product,ProductDto>(product));
         }
         [HttpGet("brands")]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()

@@ -13,9 +13,9 @@ namespace Infrastructure.Data
         public static IQueryable<T> GetQuery(IQueryable<T> query,ISpecification<T> spec)
         {
             var inputquey = query;
-            if (spec.Criteria is not null)
+            if (spec.Criteria != null)
             {
-                inputquey.Where(spec.Criteria);
+               inputquey = inputquey.Where(spec.Criteria);
             }
             inputquey = spec.Includes.Aggregate(inputquey,(current ,include)=> current.Include(include));
             return inputquey;
