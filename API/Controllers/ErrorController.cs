@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 namespace API.Controllers
 {
     [Route("error/{code}")]
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorController :BaseController
     {
         private readonly ILogger<ErrorController> _logger;

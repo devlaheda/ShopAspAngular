@@ -17,6 +17,18 @@ namespace Infrastructure.Data
             {
                inputquey = inputquey.Where(spec.Criteria);
             }
+            if (spec.OrderByAsc != null)
+            {
+               inputquey = inputquey.OrderBy(spec.OrderByAsc);
+            }
+            if (spec.OrderByDesc != null)
+            {
+               inputquey = inputquey.OrderByDescending(spec.OrderByDesc);
+            }
+            if (spec.IsPaginationEnabled)
+            {
+                inputquey = inputquey.Skip(spec.Skip).Take(spec.Take);
+            }
             inputquey = spec.Includes.Aggregate(inputquey,(current ,include)=> current.Include(include));
             return inputquey;
         }

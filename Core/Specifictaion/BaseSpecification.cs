@@ -25,9 +25,31 @@ namespace Core.Specifictaion
 
         public List<Expression<Func<TEntity, object>>> Includes {get;}
 
+        public Expression<Func<TEntity, object>> OrderByAsc {get; private set;}
+
+        public Expression<Func<TEntity, object>> OrderByDesc {get; private set;}
+
+        public int Take {get;private set;}
+
+        public int Skip {get;private set;}
+
+        public bool IsPaginationEnabled {get;private set;}
+
         protected void AddInclude(Expression<Func<TEntity,object>> include)
         {
             Includes.Add(include);    
+        }
+        protected void AddOrderByAsc(Expression<Func<TEntity,object>> orderByAsc){
+            OrderByAsc = orderByAsc;
+        }
+
+        protected void AddOrderByDesc(Expression<Func<TEntity,object>> orderByDesc){
+            OrderByDesc = orderByDesc;
+        }
+        protected void AddPagination(int skip,int take){
+            Skip = skip;
+            Take = take;
+            IsPaginationEnabled = true;
         }
     }
 }

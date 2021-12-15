@@ -6,11 +6,11 @@ using Core.Interfaces;
 using Core.Specifictaion;
 using AutoMapper;
 using API.DTOs;
+using API.Helpers;
 
 namespace API.Controllers
 {
-    public class ProductsController : BaseController
-    {
+    public class ProductsController : BaseController     {
         private readonly IGenericRepository<Product> _productRepository;
         private readonly IGenericRepository<ProductBrand> _brandRepository;
         private readonly IGenericRepository<ProductType> _typesRepository;
@@ -26,11 +26,14 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProducts()
+        public async Task<ActionResult<PaginationWrapper<ProductDto>>> GetProducts( [FromQuery]ProductsSpecParams productsSpecParams)
         {
-            var spec = new  ProductWithTypesAndBrandsSpecification();
+            var spec = new  ProductWithTypesAndBrandsSpecification(productsSpecParams);
+            var countspec = new ProductCountSpecification(productsSpecParams);
+            var count = await _productRepository.GetCountAsync(countspec);
             var products = await  _productRepository.GetAllWithSpecsAsync(spec);
-            return Ok(_mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products));
+            var dtos = _mapper.Map<IReadOnlyList<Product>,IReadOnlyList<ProductDto>>(products);
+            return Ok(new PaginationWrapper<ProductDto>(productsSpecParams.PageSize,productsSpecParams.PageIndex,count,dtos));
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDto>> GetProduct(int id)
@@ -54,7 +57,7 @@ namespace API.Controllers
                return Ok(brands);
         }
          [HttpGet("types")]
-        public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductTypes()
+        public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
         {
                var types =  await _typesRepository.GetAllAsync();
                if (types is null)

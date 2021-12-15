@@ -34,12 +34,15 @@ namespace Infrastructure.Data
         public async Task<T> GetByIdWithSpecsAsync(ISpecification<T> spec)
         {
             return await ApplySpecification(spec).FirstOrDefaultAsync();
+        }        
+        public async Task<int> GetCountAsync(ISpecification<T> spec)
+        {
+            return await ApplySpecification(spec).CountAsync();
         }
-
-
         private IQueryable<T> ApplySpecification (ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(_context.Set<T>().AsQueryable(),spec);
         }
+
     }
 }
