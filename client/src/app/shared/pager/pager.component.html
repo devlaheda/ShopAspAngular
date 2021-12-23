@@ -1,0 +1,11 @@
+<div *ngIf="count && this.count > 0">
+   <pagination 
+                [boundaryLinks]="true" 
+                [totalItems]="this.count" 
+                (pageChanged)="onPagerPageChanged($event)"
+                [itemsPerPage]="this.size"
+                previousText="&lsaquo;" 
+                nextText="&rsaquo;"
+                firstText="&laquo;">
+</pagination> 
+</div>

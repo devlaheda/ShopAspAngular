@@ -23,9 +23,6 @@ namespace Core.Specifictaion
         {
             get { return _search; }
             set { _search = value?.ToLower(); }
-        }
-        
-
-
+        } 
     }
 }
