@@ -11,3 +11,16 @@
     right: 32px;
 
 }
+a{
+    color:grey;
+
+    &.active{
+       color: orange; 
+    }
+}
+.logo{
+    cursor: pointer;
+    &.focus{
+        outline: none;
+    }
+}
