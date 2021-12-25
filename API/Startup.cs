@@ -28,8 +28,8 @@ namespace API
             services.AddControllers();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<ShopContext>(x=> x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
-            services.AddSingleton<ConnectionMultiplexer>(c => {
-                var con = ConfigurationOptions.Parse(_config.GetConnectionString(""),true);
+            services.AddSingleton<IConnectionMultiplexer>(c => {
+                var con = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"),true);
                 return ConnectionMultiplexer.Connect(con);
             });
             services.AddSwaggerGen(c =>
