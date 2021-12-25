@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -27,6 +28,10 @@ namespace API
             services.AddControllers();
             services.AddAutoMapper(typeof(MappingProfiles));
             services.AddDbContext<ShopContext>(x=> x.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
+            services.AddSingleton<ConnectionMultiplexer>(c => {
+                var con = ConfigurationOptions.Parse(_config.GetConnectionString(""),true);
+                return ConnectionMultiplexer.Connect(con);
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
