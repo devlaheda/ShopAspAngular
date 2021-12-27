@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { BasketService } from 'src/app/basket/basket.service';
 import { IProduct } from 'src/app/shared/models/product';
 import { ShopService } from '../shop.service';
 
@@ -10,12 +11,12 @@ import { ShopService } from '../shop.service';
 })
 export class ProductDetailsComponent implements OnInit {
   product:IProduct;
-  constructor(private shopService:ShopService , private activatedRoute:ActivatedRoute) { }
+  quantity = 1
+  constructor(private shopService:ShopService , private activatedRoute:ActivatedRoute,private basketservice:BasketService) { }
 
   ngOnInit(): void {
     this.getProduct();
   }
-
   getProduct(){
     this.shopService.getProduct(+this.activatedRoute.snapshot.paramMap.get('id')).subscribe({
       next: res =>{ this.product = res},
@@ -24,6 +25,16 @@ export class ProductDetailsComponent implements OnInit {
       
     })
   }
-
+  onAddToBasket(){
+    this.basketservice.AddItemToBasket(this.product,this.quantity);
+  }
+  onIncrement(){
+    this.quantity++
+  }
+  onDecrement(){
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
 
 }

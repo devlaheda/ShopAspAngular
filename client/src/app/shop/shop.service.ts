@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { delay, map } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { IPagination } from '../shared/models/pagination';
 import { IProduct } from '../shared/models/product';
 import{IProductBrand} from '../shared/models/productBrand'
@@ -12,7 +12,7 @@ import { ProductParams } from './productParams';
 })
 export class ShopService {
 
-  private _baseUrl = 'https://localhost:5001/api/';
+  private _baseUrl = environment.baseUrl;
   constructor(private http:HttpClient) { }
   getProducts(shopParams:ProductParams){
     let params = new HttpParams();
